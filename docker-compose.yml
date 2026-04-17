@@ -1,0 +1,16 @@
+services:
+  benni-web-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: benni-web-ui
+    restart: unless-stopped
+    ports:
+      - "${WEB_UI_PORT:-8082}:80"
+    networks:
+      - homeserver_shared
+
+networks:
+  homeserver_shared:
+    external: true
+    name: homeserver_shared

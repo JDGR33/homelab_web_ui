@@ -1,0 +1,108 @@
+:root {
+    --bg-a: #f2f7ff;
+    --bg-b: #dbe9ff;
+    --card: #ffffff;
+    --line: #d8e1ee;
+    --text: #102542;
+    --muted: #4d6482;
+    --accent: #1769e0;
+    --accent-hover: #0f56bd;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text);
+    background: linear-gradient(160deg, var(--bg-a), var(--bg-b));
+    min-height: 100vh;
+}
+
+.page {
+    display: grid;
+    place-items: center;
+    padding: 2rem 1rem;
+}
+
+.panel {
+    width: min(980px, 100%);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.2rem;
+    box-shadow: 0 12px 30px rgba(16, 37, 66, 0.1);
+}
+
+h1 {
+    margin: 0;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+}
+
+.subtitle {
+    margin: 0.35rem 0 1rem;
+    color: var(--muted);
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+button {
+    appearance: none;
+    border: 0;
+    border-radius: 10px;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 600;
+    padding: 0.6rem 0.9rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background: var(--accent-hover);
+}
+
+.status {
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 640px;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 0.65rem 0.5rem;
+    border-bottom: 1px solid var(--line);
+}
+
+thead th {
+    font-size: 0.9rem;
+    color: var(--muted);
+}
+
+.empty,
+.error {
+    text-align: center;
+    padding: 1rem;
+    color: var(--muted);
+}
+
+.error {
+    color: #8d1c13;
+}

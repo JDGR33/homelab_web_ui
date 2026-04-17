@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Benni Currency Viewer</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+    <main class="page">
+        <section class="panel">
+            <h1>Benni Currency Rates</h1>
+            <p class="subtitle">First 5 rows from currency_rates</p>
+
+            <div class="actions">
+                <button id="refreshBtn" type="button">Refresh</button>
+                <span id="status" class="status">Idle</span>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Currency</th>
+                            <th>Rate</th>
+                            <th>Scraped At</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rowsBody"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="/app.js"></script>
+</body>
+
+</html>
