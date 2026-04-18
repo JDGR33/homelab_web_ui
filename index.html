@@ -35,7 +35,7 @@
 
             <section class="chart-section" aria-labelledby="chartTitle">
                 <h2 id="chartTitle">EUR / USD Last 4 Months</h2>
-                <p class="subtitle">Table and line plot built from /currency-rates/last-four-months endpoint</p>
+                <p class="subtitle">Line plot built from /currency-rates/last-four-months endpoint</p>
                 <div class="chart-meta">
                     <div class="legend">
                         <span class="legend-item">
@@ -48,18 +48,6 @@
                         </span>
                     </div>
                     <span id="chartStatus" class="status">Chart idle</span>
-                </div>
-                <div class="chart-wrap">
-                    <table aria-label="EUR and USD rates over the last 4 months">
-                        <thead>
-                            <tr>
-                                <th>Currency</th>
-                                <th>Rate</th>
-                                <th>Timestamp</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historyRowsBody"></tbody>
-                    </table>
                 </div>
                 <div class="plot-wrap">
                     <svg id="currencyChart" viewBox="0 0 900 340" role="img"

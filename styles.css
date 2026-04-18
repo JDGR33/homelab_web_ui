@@ -155,15 +155,6 @@ h2 {
     background: #d97706;
 }
 
-.chart-wrap {
-    width: 100%;
-    overflow-x: auto;
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 0.45rem;
-    background: #f9fbff;
-}
-
 .plot-wrap {
     width: 100%;
     overflow-x: auto;

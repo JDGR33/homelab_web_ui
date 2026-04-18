@@ -2,7 +2,6 @@ const rowsBody = document.getElementById("rowsBody");
 const statusEl = document.getElementById("status");
 const refreshBtn = document.getElementById("refreshBtn");
 const chartStatusEl = document.getElementById("chartStatus");
-const historyRowsBody = document.getElementById("historyRowsBody");
 const currencyChartEl = document.getElementById("currencyChart");
 
 function parseNumeric(value) {
@@ -213,14 +212,6 @@ function parseCurrencyRows(rows) {
         .sort((a, b) => a.timestamp - b.timestamp);
 }
 
-function formatRate(value) {
-    return Number.isFinite(value) ? value.toFixed(4) : "";
-}
-
-function formatTimestamp(value) {
-    return Number.isFinite(value) ? new Date(value).toLocaleString() : "";
-}
-
 function buildPath(points, xScale, yScale) {
     if (points.length === 0) {
         return "";
@@ -302,22 +293,16 @@ function renderCurrencyLinePlot(eurRows, usdRows) {
   `;
 }
 
-function renderCurrencyTable(eurRows, usdRows) {
-    if (!historyRowsBody || !chartStatusEl) {
+function renderCurrencyHistory(eurRows, usdRows) {
+    if (!chartStatusEl) {
         return;
     }
 
     const eur = parseCurrencyRows(eurRows);
     const usd = parseCurrencyRows(usdRows);
-    const mergedRows = [
-        ...eur.map((row) => ({ ...row, currency: "EUR" })),
-        ...usd.map((row) => ({ ...row, currency: "USD" })),
-    ].sort((a, b) => b.timestamp - a.timestamp);
+    const totalRows = eur.length + usd.length;
 
-    historyRowsBody.innerHTML = "";
-
-    if (mergedRows.length === 0) {
-        historyRowsBody.innerHTML = '<tr><td class="empty" colspan="3">No 4-month currency data found.</td></tr>';
+    if (totalRows === 0) {
         if (currencyChartEl) {
             currencyChartEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" class="chart-label">No 4-month currency data found.</text>';
         }
@@ -325,19 +310,9 @@ function renderCurrencyTable(eurRows, usdRows) {
         return;
     }
 
-    for (const row of mergedRows) {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-      <td>${row.currency}</td>
-      <td>${formatRate(row.rate)}</td>
-      <td>${formatTimestamp(row.timestamp)}</td>
-    `;
-        historyRowsBody.appendChild(tr);
-    }
-
     renderCurrencyLinePlot(eur, usd);
 
-    chartStatusEl.textContent = `Loaded ${mergedRows.length} row(s) and plot (EUR: ${eur.length}, USD: ${usd.length})`;
+    chartStatusEl.textContent = `Loaded plot (EUR: ${eur.length}, USD: ${usd.length})`;
 }
 
 async function fetchFirstOkJson(urls) {
@@ -364,15 +339,12 @@ async function fetchFirstOkJson(urls) {
 }
 
 async function loadCurrencyChart() {
-    if (!chartStatusEl || !historyRowsBody) {
+    if (!chartStatusEl || !currencyChartEl) {
         return;
     }
 
-    chartStatusEl.textContent = "Loading 4-month table and plot...";
-    historyRowsBody.innerHTML = '<tr><td class="empty" colspan="3">Loading...</td></tr>';
-    if (currencyChartEl) {
-        currencyChartEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" class="chart-label">Loading plot...</text>';
-    }
+    chartStatusEl.textContent = "Loading 4-month plot...";
+    currencyChartEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" class="chart-label">Loading plot...</text>';
 
     try {
         const [eurPayload, usdPayload] = await Promise.all([
@@ -389,13 +361,10 @@ async function loadCurrencyChart() {
         const eurRows = extractRowsFromPayload(eurPayload);
         const usdRows = extractRowsFromPayload(usdPayload);
 
-        renderCurrencyTable(eurRows, usdRows);
+        renderCurrencyHistory(eurRows, usdRows);
     } catch (error) {
-        historyRowsBody.innerHTML = `<tr><td class="error" colspan="3">${error.message}</td></tr>`;
-        if (currencyChartEl) {
-            currencyChartEl.innerHTML = `<text x="50%" y="50%" text-anchor="middle" class="chart-label">${error.message}</text>`;
-        }
-        chartStatusEl.textContent = "Table error";
+        currencyChartEl.innerHTML = `<text x="50%" y="50%" text-anchor="middle" class="chart-label">${error.message}</text>`;
+        chartStatusEl.textContent = "Plot error";
     }
 }
 
