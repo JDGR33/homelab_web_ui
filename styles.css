@@ -76,6 +76,7 @@ button:hover {
 .table-wrap {
     width: 100%;
     overflow-x: auto;
+    margin-bottom: 1rem;
 }
 
 table {
@@ -105,4 +106,118 @@ thead th {
 
 .error {
     color: #8d1c13;
+}
+
+.chart-section {
+    border-top: 1px solid var(--line);
+    padding-top: 1rem;
+}
+
+h2 {
+    margin: 0;
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+}
+
+.chart-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.legend {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.legend-dot.eur {
+    background: #1769e0;
+}
+
+.legend-dot.usd {
+    background: #d97706;
+}
+
+.chart-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.45rem;
+    background: #f9fbff;
+}
+
+.plot-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.45rem;
+    margin-top: 0.75rem;
+    background: #f9fbff;
+}
+
+#currencyChart {
+    width: 100%;
+    min-width: 640px;
+    display: block;
+}
+
+.chart-grid {
+    stroke: #e2e9f5;
+    stroke-width: 1;
+}
+
+.chart-axis {
+    stroke: #9fb3d1;
+    stroke-width: 1;
+}
+
+.chart-line {
+    fill: none;
+    stroke-width: 2.5;
+}
+
+.chart-line.eur {
+    stroke: #1769e0;
+}
+
+.chart-line.usd {
+    stroke: #d97706;
+}
+
+.chart-label {
+    fill: #4d6482;
+    font-size: 11px;
+}
+
+.chart-point.eur {
+    fill: #1769e0;
+}
+
+.chart-point.usd {
+    fill: #d97706;
+}
+
+@media (max-width: 768px) {
+    .panel {
+        padding: 0.9rem;
+    }
 }
