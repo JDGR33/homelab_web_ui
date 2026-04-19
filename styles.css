@@ -155,6 +155,10 @@ h2 {
     background: #d97706;
 }
 
+.legend-dot.usdt {
+    background: #059669;
+}
+
 .plot-wrap {
     width: 100%;
     overflow-x: auto;
@@ -194,6 +198,10 @@ h2 {
     stroke: #d97706;
 }
 
+.chart-line.usdt {
+    stroke: #059669;
+}
+
 .chart-label {
     fill: #4d6482;
     font-size: 11px;
@@ -205,6 +213,10 @@ h2 {
 
 .chart-point.usd {
     fill: #d97706;
+}
+
+.chart-point.usdt {
+    fill: #059669;
 }
 
 @media (max-width: 768px) {

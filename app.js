@@ -222,12 +222,12 @@ function buildPath(points, xScale, yScale) {
         .join(" ");
 }
 
-function renderCurrencyLinePlot(eurRows, usdRows) {
+function renderCurrencyLinePlot(eurRows, usdRows, usdtRows) {
     if (!currencyChartEl) {
         return;
     }
 
-    const allRows = [...eurRows, ...usdRows];
+    const allRows = [...eurRows, ...usdRows, ...usdtRows];
     if (allRows.length === 0) {
         currencyChartEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" class="chart-label">No data to plot.</text>';
         return;
@@ -282,6 +282,7 @@ function renderCurrencyLinePlot(eurRows, usdRows) {
 
     const eurPath = buildPath(eurRows, xScale, yScale);
     const usdPath = buildPath(usdRows, xScale, yScale);
+    const usdtPath = buildPath(usdtRows, xScale, yScale);
 
     currencyChartEl.innerHTML = `
     <line x1="${pad.left}" y1="${height - pad.bottom}" x2="${width - pad.right}" y2="${height - pad.bottom}" class="chart-axis" />
@@ -290,29 +291,31 @@ function renderCurrencyLinePlot(eurRows, usdRows) {
     ${xTickSvg}
     ${eurPath ? `<path d="${eurPath}" class="chart-line eur" />` : ""}
     ${usdPath ? `<path d="${usdPath}" class="chart-line usd" />` : ""}
+    ${usdtPath ? `<path d="${usdtPath}" class="chart-line usdt" />` : ""}
   `;
 }
 
-function renderCurrencyHistory(eurRows, usdRows) {
+function renderCurrencyHistory(eurRows, usdRows, usdtRows) {
     if (!chartStatusEl) {
         return;
     }
 
     const eur = parseCurrencyRows(eurRows);
     const usd = parseCurrencyRows(usdRows);
-    const totalRows = eur.length + usd.length;
+    const usdt = parseCurrencyRows(usdtRows);
+    const totalRows = eur.length + usd.length + usdt.length;
 
     if (totalRows === 0) {
         if (currencyChartEl) {
             currencyChartEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" class="chart-label">No 4-month currency data found.</text>';
         }
-        chartStatusEl.textContent = `No data (raw EUR: ${eurRows.length}, raw USD: ${usdRows.length})`;
+        chartStatusEl.textContent = `No data (raw EUR: ${eurRows.length}, raw USD: ${usdRows.length}, raw USDT: ${usdtRows.length})`;
         return;
     }
 
-    renderCurrencyLinePlot(eur, usd);
+    renderCurrencyLinePlot(eur, usd, usdt);
 
-    chartStatusEl.textContent = `Loaded plot (EUR: ${eur.length}, USD: ${usd.length})`;
+    chartStatusEl.textContent = `Loaded plot (EUR: ${eur.length}, USD: ${usd.length}, USDT: ${usdt.length})`;
 }
 
 async function fetchFirstOkJson(urls) {
@@ -347,7 +350,7 @@ async function loadCurrencyChart() {
     currencyChartEl.innerHTML = '<text x="50%" y="50%" text-anchor="middle" class="chart-label">Loading plot...</text>';
 
     try {
-        const [eurPayload, usdPayload] = await Promise.all([
+        const [eurResult, usdResult, usdtResult] = await Promise.allSettled([
             fetchFirstOkJson([
                 "/api/currency-rates/last-four-months/euro",
                 "/api/currency-rates/last-four-months/eur",
@@ -357,11 +360,21 @@ async function loadCurrencyChart() {
                 "/api/currency-rates/last-four-months/dollar",
                 "/api/currency-rates/last-four-months/usd",
             ]),
+            fetchFirstOkJson([
+                "/api/currency-rates/last-four-months/usdt",
+                "/api/currency-rates/last-four-months/tether",
+            ]),
         ]);
-        const eurRows = extractRowsFromPayload(eurPayload);
-        const usdRows = extractRowsFromPayload(usdPayload);
 
-        renderCurrencyHistory(eurRows, usdRows);
+        if (eurResult.status === "rejected" && usdResult.status === "rejected" && usdtResult.status === "rejected") {
+            throw eurResult.reason ?? usdResult.reason ?? usdtResult.reason ?? new Error("No endpoint responded");
+        }
+
+        const eurRows = eurResult.status === "fulfilled" ? extractRowsFromPayload(eurResult.value) : [];
+        const usdRows = usdResult.status === "fulfilled" ? extractRowsFromPayload(usdResult.value) : [];
+        const usdtRows = usdtResult.status === "fulfilled" ? extractRowsFromPayload(usdtResult.value) : [];
+
+        renderCurrencyHistory(eurRows, usdRows, usdtRows);
     } catch (error) {
         currencyChartEl.innerHTML = `<text x="50%" y="50%" text-anchor="middle" class="chart-label">${error.message}</text>`;
         chartStatusEl.textContent = "Plot error";
