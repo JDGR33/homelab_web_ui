@@ -197,6 +197,8 @@ function parseCurrencyRows(rows) {
                 row.buy
             ),
             timestamp: parseTimestampValue(
+                row.scrape_date ??
+                row.scrapeDate ??
                 row.scraped_at ??
                 row.scrapedAt ??
                 row.timestamp ??
@@ -435,7 +437,7 @@ async function loadRows() {
         <td>${row.id ?? ""}</td>
         <td>${row.currency ?? ""}</td>
         <td>${row.rate ?? ""}</td>
-        <td>${row.scraped_at ?? ""}</td>
+        <td>${row.scrape_date ?? row.scrapeDate ?? row.scraped_at ?? row.scrapedAt ?? ""}</td>
       `;
             rowsBody.appendChild(tr);
         }
