@@ -219,6 +219,19 @@ h2 {
     fill: #059669;
 }
 
+.chart-point {
+    stroke: #ffffff;
+    stroke-width: 1.2;
+    transition: transform 120ms ease, stroke-width 120ms ease;
+    transform-box: fill-box;
+    transform-origin: center;
+}
+
+.chart-point:hover {
+    transform: scale(1.28);
+    stroke-width: 1.8;
+}
+
 @media (max-width: 768px) {
     .panel {
         padding: 0.9rem;

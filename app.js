@@ -222,6 +222,24 @@ function buildPath(points, xScale, yScale) {
         .join(" ");
 }
 
+function buildPointsSvg(points, xScale, yScale, seriesLabel, seriesClassName) {
+    return points
+        .map((point) => {
+            const dateLabel = new Date(point.timestamp).toLocaleString(undefined, {
+                dateStyle: "medium",
+                timeStyle: "short",
+            });
+            const rateLabel = point.rate.toFixed(4);
+
+            return `
+            <circle cx="${xScale(point.timestamp)}" cy="${yScale(point.rate)}" r="3.5" class="chart-point ${seriesClassName}">
+                <title>${seriesLabel} - ${dateLabel} - Rate: ${rateLabel}</title>
+            </circle>
+        `;
+        })
+        .join("");
+}
+
 function renderCurrencyLinePlot(eurRows, usdRows, usdtRows) {
     if (!currencyChartEl) {
         return;
@@ -283,6 +301,9 @@ function renderCurrencyLinePlot(eurRows, usdRows, usdtRows) {
     const eurPath = buildPath(eurRows, xScale, yScale);
     const usdPath = buildPath(usdRows, xScale, yScale);
     const usdtPath = buildPath(usdtRows, xScale, yScale);
+    const eurPoints = buildPointsSvg(eurRows, xScale, yScale, "EUR", "eur");
+    const usdPoints = buildPointsSvg(usdRows, xScale, yScale, "USD", "usd");
+    const usdtPoints = buildPointsSvg(usdtRows, xScale, yScale, "USDT", "usdt");
 
     currencyChartEl.innerHTML = `
     <line x1="${pad.left}" y1="${height - pad.bottom}" x2="${width - pad.right}" y2="${height - pad.bottom}" class="chart-axis" />
@@ -292,6 +313,9 @@ function renderCurrencyLinePlot(eurRows, usdRows, usdtRows) {
     ${eurPath ? `<path d="${eurPath}" class="chart-line eur" />` : ""}
     ${usdPath ? `<path d="${usdPath}" class="chart-line usd" />` : ""}
     ${usdtPath ? `<path d="${usdtPath}" class="chart-line usdt" />` : ""}
+        ${eurPoints}
+        ${usdPoints}
+        ${usdtPoints}
   `;
 }
 
